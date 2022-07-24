@@ -91,7 +91,10 @@ int write_sha1_buffer(unsigned char* sha1, const void* buf, unsigned int size) {
     return (errno == EEXIST) ? 0 : -1;
   }
 
-  write(fd, buf, size);
+  if (write(fd, buf, size) != size) {
+    perror("write error");
+    exit(1);
+  }
   close(fd);
 
   return 0;
@@ -155,6 +158,8 @@ void* read_sha1_file(unsigned char* sha1, char* type, unsigned long *size) {
   }
 
   inflateEnd(&stream);
+  munmap(map, st.st_size);
+
   return buf;
 }
 

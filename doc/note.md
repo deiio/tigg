@@ -8,7 +8,7 @@ it as the storage area.
 3. Or, use the local cache directory `.dircache` as the storage area.
 4. Create all directories in storage area.
 
-# commit-tree
+## commit-tree
 
 1. Use `commit-tree <sha1> [-p <sha1>]* < changelog`.
 2. Read in all parents.
@@ -24,3 +24,8 @@ it as the storage area.
 The contents deflated will be written to the file named its contents
 of hash sha1.
 
+## cat-file
+
+1. Use `cat-file <sha1>`.
+2. Read in the file.
+3. Output its type and write the content to temperate file.
