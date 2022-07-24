@@ -5,6 +5,16 @@
 
 #include "cache.h"
 
+const char* sha1_file_directory = NULL;
+struct cache_entry** active_cache = NULL;
+unsigned int active_nr;
+unsigned int active_alloc;
+
+static int error(const char* msg) {
+  fprintf(stderr, "error: %s\n", msg);
+  return -1;
+}
+
 void usage(const char* err) {
   fprintf(stderr, "%s\n", err);
   exit(1);
@@ -200,4 +210,87 @@ int write_sha1_file(const char* buf, unsigned int len) {
 
   free(compressed);
   return 0;
+}
+
+static int verify_hdr(struct cache_header* hdr, unsigned long size) {
+  SHA_CTX c;
+  unsigned char sha1[20];
+
+  if (hdr->signature != CACHE_SIGNATURE) {
+    return error("bad signature");
+  }
+
+  if (hdr->version != 1) {
+    return error("bad version");
+  }
+
+  SHA1_Init(&c);
+  SHA1_Update(&c, hdr, offsetof(struct cache_header, sha1));
+  SHA1_Update(&c, hdr + 1, size - sizeof(*hdr));
+  SHA1_Final(sha1, &c);
+
+  if (memcmp(sha1, hdr->sha1, sizeof(sha1)) != 0) {
+    return error("bad header sha1");
+  }
+
+  return 0;
+}
+
+int read_cache() {
+  int fd;
+  int i;
+  unsigned long size = 0;
+  unsigned long offset;
+  struct stat st;
+  void* map;
+  struct cache_header* hdr;
+
+  errno = EBUSY;
+  sha1_file_directory = getenv(DB_ENVIRONMENT);
+  if (!sha1_file_directory) {
+    sha1_file_directory = DEFAULT_DB_ENVIRONMENT;
+  }
+
+  if (access(sha1_file_directory, X_OK) != 0) {
+    return error("no access to SHA1 file directory");
+  }
+
+  fd = open(".dircache/index", O_RDONLY);
+  if (fd < 0) {
+    return (errno == ENOENT) ? 0 : error("open failed");
+  }
+
+  map = MAP_FAILED;
+  if (fstat(fd, &st) == 0) {
+    map = NULL;
+    size = st.st_size;
+    errno = EINVAL;
+    if (size > sizeof(struct cache_header)) {
+      map = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
+    }
+  }
+  close(fd);
+
+  if (map == MAP_FAILED) {
+    return error("mmap failed");
+  }
+
+  hdr = map;
+  if (verify_hdr(hdr, size) < 0) {
+    munmap(&map, size);
+    errno = EINVAL;
+    return error("verify header failed");
+  }
+
+  active_nr = hdr->entries;
+  active_alloc = alloc_nr(active_nr);
+  active_cache = calloc(active_alloc, sizeof(struct cache_entry*));
+
+  offset = sizeof(*hdr);
+  for (i = 0; i < hdr->entries; i++) {
+    struct cache_entry* ce = map + offset;
+    offset += ce_size(ce);
+    active_cache[i] = ce;
+  }
+  return active_nr;
 }

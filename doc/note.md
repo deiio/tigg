@@ -29,3 +29,15 @@ of hash sha1.
 1. Use `cat-file <sha1>`.
 2. Read in the file.
 3. Output its type and write the content to temperate file.
+
+## update-cache
+
+1. Use `update-cache [filepath ...]`.
+2. Read cached entries from `.dircache/index`.
+3. Create the file `.dircache/index.lock` while processing the entries.
+4. Add all file to the cache.
+   1. Verify the file path, filter out dot, dot-dot, absolute path,
+   hidden file, non-regular file.
+   2. Add the file to objects and add it to entries.
+5. Write the cache records to `.dircache/index.lock`, and rename it to
+`.dircache/index`.
