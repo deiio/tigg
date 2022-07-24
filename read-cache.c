@@ -97,6 +97,67 @@ int write_sha1_buffer(unsigned char* sha1, const void* buf, unsigned int size) {
   return 0;
 }
 
+void* read_sha1_file(unsigned char* sha1, char* type, unsigned long *size) {
+  z_stream stream;
+  char buffer[8192];
+  struct stat st;
+  int fd;
+  int ret;
+  int bytes;
+  void* map;
+  void* buf;
+  char* filename = sha1_file_name(sha1);
+
+  fd = open(filename, O_RDONLY);
+  if (fd < 0) {
+    perror(filename);
+    return NULL;
+  }
+
+  if (fstat(fd, &st) < 0) {
+    close(fd);
+    return NULL;
+  }
+
+  map = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+  close(fd);
+  if (MAP_FAILED == map) {
+    return NULL;
+  }
+
+  /* Get the data stream */
+  memset(&stream, 0, sizeof(stream));
+  stream.next_in = map;
+  stream.avail_in = st.st_size;
+  stream.next_out = (void*)buffer;
+  stream.avail_out = sizeof(buffer);
+
+  inflateInit(&stream);
+  ret = inflate(&stream, 0);
+  if (sscanf(buffer, "%10s %lu", type, size) != 2) {
+    return NULL;
+  }
+
+  bytes = strlen(buffer) + 1;
+  buf = malloc(*size);
+  if (!buf) {
+    return NULL;
+  }
+
+  memcpy(buf, buffer + bytes, stream.total_out - bytes);
+  bytes = stream.total_out - bytes;
+  if (bytes < *size && ret == Z_OK) {
+    stream.next_out = buf + bytes;
+    stream.avail_out = *size - bytes;
+    while (inflate(&stream, Z_FINISH) == Z_OK) {
+      /* nothing */
+    }
+  }
+
+  inflateEnd(&stream);
+  return buf;
+}
+
 int write_sha1_file(const char* buf, unsigned int len) {
   int size;
   char *compressed;
@@ -111,12 +172,12 @@ int write_sha1_file(const char* buf, unsigned int len) {
   compressed = malloc(size);
 
   /* Compress it */
-  stream.next_in = buf;
+  stream.next_in = (void*)buf;
   stream.avail_in = len;
-  stream.next_out = compressed;
+  stream.next_out = (void*)compressed;
   stream.avail_out = size;
   while (deflate(&stream, Z_FINISH) == Z_OK) {
-    /* nothing */;
+    /* nothing */
   }
 
   deflateEnd(&stream);
