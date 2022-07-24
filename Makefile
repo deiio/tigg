@@ -2,10 +2,11 @@
 # Author: Furzoom, mn@furzoom.com
 
 # Optional defaults
-CFLAGS ?= -Wall -g -O2
+CFLAGS ?= -Wall -g -g3 -O2
+LDFLAGS ?= -lz -lssl -lcrypto
 
 # All binaries
-PROG = init-db
+PROG = commit-tree init-db
 
 ########################################
 # Targets
@@ -13,6 +14,12 @@ PROG = init-db
 all: $(PROG)
 
 init-db: init-db.o
+
+commit-tree: commit-tree.o read-cache.o
+
+init-db.o: cache.h
+commit-tree.o: cache.h
+read-cache.o: cache.h
 
 install: $(PROG)
 	install $(PROG) $(HOME)/bin/
