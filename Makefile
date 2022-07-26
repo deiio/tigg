@@ -3,7 +3,8 @@
 
 # Optional defaults
 CFLAGS ?= -Wall -g -g3 -O2
-LDFLAGS ?= -lz -lssl -lcrypto
+LDFLAGS ?=
+LDLIBS ?= -lz -lssl -lcrypto
 
 # All binaries
 PROG = cat-file commit-tree init-db update-cache

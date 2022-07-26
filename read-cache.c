@@ -10,6 +10,19 @@ struct cache_entry** active_cache = NULL;
 unsigned int active_nr;
 unsigned int active_alloc;
 
+
+inline unsigned long cache_entry_size(unsigned long len) {
+  return (offsetof(struct cache_entry, name) + len + 8) & ~7;
+}
+
+inline unsigned int ce_size(const struct cache_entry* ce) {
+  return cache_entry_size(ce->namelen);
+}
+
+inline unsigned int alloc_nr(unsigned int n) {
+  return (n + 16) * 3 / 2;
+}
+
 static int error(const char* msg) {
   fprintf(stderr, "error: %s\n", msg);
   return -1;

@@ -3,8 +3,8 @@
  * Author: Furzoom, mn@furzoom.com
  */
 
-#ifndef TIGG__CACHE_H_
-#define TIGG__CACHE_H_
+#ifndef TIGG_CACHE_H_
+#define TIGG_CACHE_H_
 
 #include <errno.h>
 #include <fcntl.h>
@@ -69,22 +69,14 @@ struct cache_entry {
   char name[0];
 };
 
-const char* sha1_file_directory;
-struct cache_entry** active_cache;
-unsigned int active_nr;
-unsigned int active_alloc;
+extern const char* sha1_file_directory;
+extern struct cache_entry** active_cache;
+extern unsigned int active_nr;
+extern unsigned int active_alloc;
 
-inline unsigned long cache_entry_size(unsigned long len) {
-  return (offsetof(struct cache_entry, name) + len + 8) & ~7;
-}
-
-inline unsigned int ce_size(const struct cache_entry* ce) {
-  return cache_entry_size(ce->namelen);
-}
-
-inline unsigned int alloc_nr(unsigned int n) {
-  return (n + 16) * 3 / 2;
-}
+unsigned long cache_entry_size(unsigned long len);
+unsigned int ce_size(const struct cache_entry* ce);
+unsigned int alloc_nr(unsigned int n);
 
 /* Initialize the cache information */
 extern int read_cache();
@@ -108,4 +100,4 @@ extern char* sha1_to_hex(const unsigned char* sha1);
 /* General helper functions */
 extern void usage(const char* err);
 
-#endif  /* TIGG__CACHE_H_ */
+#endif  /* TIGG_CACHE_H_ */
