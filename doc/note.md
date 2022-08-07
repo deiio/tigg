@@ -1,6 +1,6 @@
 # Important Thoughts
 
-## init-db
+## `init-db`
 
 1. Create local cache directory `.dircache`.
 2. If set the environment variable `SHA1_FILE_DIRECTORY`, use
@@ -8,7 +8,7 @@ it as the storage area.
 3. Or, use the local cache directory `.dircache` as the storage area.
 4. Create all directories in storage area.
 
-## commit-tree
+## `commit-tree`
 
 1. Use `commit-tree <sha1> [-p <sha1>]* < changelog`.
 2. Read in all parents.
@@ -25,13 +25,13 @@ it as the storage area.
 The contents deflated will be written to the file named its contents
 of hash sha1.
 
-## cat-file
+## `cat-file`
 
 1. Use `cat-file <sha1>`.
 2. Read in the file.
 3. Output its type and write the content to temperate file.
 
-## update-cache
+## `update-cache`
 
 1. Use `update-cache [filepath ...]`.
 2. Read cached entries from `.dircache/index`.
@@ -46,7 +46,7 @@ of hash sha1.
 6. Write the cache records to `.dircache/index.lock`, and rename it to
 `.dircache/index`.
 
-## show-diff
+## `show-diff`
 
 1. Use `show-diff`.
 2. Read cached entries from `.dircache/index`.
@@ -62,7 +62,7 @@ of hash sha1.
 4. If the file has been changed, show the difference of the file used
 `diff` command.
 
-## write-tree
+## `write-tree`
 
 1. Use `write-tree`.
 2. Read cached entries from `.dircache/index`.
@@ -70,3 +70,9 @@ of hash sha1.
 4. Tree object original structure:
    1. `tree + <space> + <size> + '\0'`.
    2. `<file mode> + <space> + <filename> + '\0' + <sha1>`.
+
+## `read-tree`
+
+1. Use `read-tree <sha1>`.
+2. Read the object, and check its type.
+3. Output all the files in the tree object.

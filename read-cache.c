@@ -123,7 +123,8 @@ int write_sha1_buffer(unsigned char* sha1, const void* buf, unsigned int size) {
   return 0;
 }
 
-void* read_sha1_file(unsigned char* sha1, char* type, unsigned long *size) {
+void* read_sha1_file(const unsigned char* sha1, char* type,
+                     unsigned long *size) {
   z_stream stream;
   char buffer[8192];
   struct stat st;
