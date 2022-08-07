@@ -41,3 +41,19 @@ of hash sha1.
    2. Add the file to objects and add it to entries.
 5. Write the cache records to `.dircache/index.lock`, and rename it to
 `.dircache/index`.
+
+## show-diff
+
+1. use `show-diff`.
+2. Read cached entries from `.dircache/index`.
+3. Check the status of every file cached.
+   1. Check the modifications of the file, which is changed by `mknod`,
+   `truncate`, `utime`, `write`.
+   2. Check the change time of the file, which is changed by writing or 
+   setting inode information, i.e., owner, group, link count, mode, etc.
+   3. Check the owner of the file.
+   4. Check the mode and type of the file.
+   5. Check the inode of the file.
+   6. Check the file size.
+4. If the file has been changed, show the difference of the file used
+`diff` command.
