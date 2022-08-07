@@ -14,7 +14,8 @@ it as the storage area.
 2. Read in all parents.
 3. Get committer's information, such as name, email, date.
 4. commit-tree original structure:
-   1. tag + size + '\0'. The size is the sum of the following 5 items.
+   1. `commit + <space> + <size> + '\0'`. The size is the sum of the 
+   following 5 items.
    2. `tree` + commit sha1.
    3. `parent` + parents sha1.
    4. author information. `author` + `gecos <email> date`.
@@ -39,12 +40,15 @@ of hash sha1.
    1. Verify the file path, filter out dot, dot-dot, absolute path,
    hidden file, non-regular file.
    2. Add the file to objects and add it to entries.
-5. Write the cache records to `.dircache/index.lock`, and rename it to
+5. Blob object original structure:
+   1. `blob + <space> + <size> + '\0'`.
+   2. blob data.
+6. Write the cache records to `.dircache/index.lock`, and rename it to
 `.dircache/index`.
 
 ## show-diff
 
-1. use `show-diff`.
+1. Use `show-diff`.
 2. Read cached entries from `.dircache/index`.
 3. Check the status of every file cached.
    1. Check the modifications of the file, which is changed by `mknod`,
@@ -57,3 +61,12 @@ of hash sha1.
    6. Check the file size.
 4. If the file has been changed, show the difference of the file used
 `diff` command.
+
+## write-tree
+
+1. Use `write-tree`.
+2. Read cached entries from `.dircache/index`.
+3. Write cached file to tree object.
+4. Tree object original structure:
+   1. `tree + <space> + <size> + '\0'`.
+   2. `<file mode> + <space> + <filename> + '\0' + <sha1>`.

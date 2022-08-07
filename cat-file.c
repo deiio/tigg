@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
   char type[20];
   void* buf;
   unsigned long size;
-  char tempate[] = "temp_tigg_file_XXXXXXX";
+  char tempate[] = "temp_tigg_file_XXXXXX";
   int fd;
 
   if (argc != 2 || get_sha1_hex(argv[1], sha1)) {

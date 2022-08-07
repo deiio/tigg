@@ -152,6 +152,7 @@ static int index_fd(const char* path, int name_len, struct cache_entry* ce,
 
   return ret;
 }
+
 static int add_file_to_cache(const char* path) {
   int fd;
   int name_len;
