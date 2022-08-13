@@ -17,9 +17,9 @@ static int cache_name_compare(const char* name1, int len1,
   }
 
   if (len1 < len2) {
-    return 1;
-  } else if (len1 > len2) {
     return -1;
+  } else if (len1 > len2) {
+    return 1;
   } else {
     return 0;
   }

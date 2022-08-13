@@ -50,7 +50,7 @@ static int unpack(const unsigned char* sha1) {
     char* path = strchr(buffer, ' ') + 1;
     char* data;
     unsigned long filesize;
-    unsigned int mode;
+    unsigned int mode = 0;
     int fd;
 
     if (size < len + 20 || sscanf(buffer, "%o", &mode) != 1) {

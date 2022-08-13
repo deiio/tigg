@@ -260,6 +260,11 @@ int read_cache() {
   struct cache_header* hdr;
 
   errno = EBUSY;
+  if (active_cache) {
+    return error("more than one cachefile");
+  }
+
+  errno = ENOENT;
   sha1_file_directory = getenv(DB_ENVIRONMENT);
   if (!sha1_file_directory) {
     sha1_file_directory = DEFAULT_DB_ENVIRONMENT;
@@ -279,7 +284,7 @@ int read_cache() {
     map = NULL;
     size = st.st_size;
     errno = EINVAL;
-    if (size > sizeof(struct cache_header)) {
+    if (size >= sizeof(struct cache_header)) {
       map = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
     }
   }

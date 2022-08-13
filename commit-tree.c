@@ -56,7 +56,7 @@ static int prepend_integer(char* buffer, unsigned int val, int i) {
   return i;
 }
 
-static void finish_buffer(char* tag, char** bufp, unsigned int* sizep) {
+static void finish_buffer(const char* tag, char** bufp, unsigned int* sizep) {
   int taglen;
   int offset;
   char* buf = *bufp;
@@ -178,7 +178,7 @@ int main(int argc, char* argv[]) {
 
   /* Person/date information */
   add_buffer(&buffer, &size, "author %s <%s> %s\n", gecos, email, date);
-  add_buffer(&buffer, &size, "committer %s <%s> %s\n",
+  add_buffer(&buffer, &size, "committer %s <%s> %s\n\n",
              real_gecos, real_email, real_date);
 
   /* Add the comment */
