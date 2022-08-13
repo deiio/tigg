@@ -2,7 +2,7 @@
 # Author: Furzoom, mn@furzoom.com
 
 # Optional defaults
-CFLAGS ?= -Wall -g -g3 -O2
+CFLAGS ?= -Wall -g -g3 -O3
 LDFLAGS ?=
 LDLIBS ?= -lz -lssl -lcrypto
 

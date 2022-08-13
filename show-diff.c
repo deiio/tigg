@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
-  for (i = 0; i < active_nr; i++) {
+  for (i = 0; i < entries; i++) {
     struct stat st;
     struct cache_entry* ce = active_cache[i];
     int n;
