@@ -89,8 +89,11 @@ extern
 int write_sha1_buffer(unsigned char* sha1, const void* buf, unsigned int size);
 
 /* Read and unpack a sha1 file into memory, write memory to a sha1 file */
-extern
-void* read_sha1_file(const unsigned char* sha1, char* type, unsigned long *size);
+extern void* map_sha1_file(const unsigned char* sha1, unsigned long* size);
+extern void* unpack_sha1_file(void* map, unsigned long map_size,
+                              char* type, unsigned long* size);
+extern void* read_sha1_file(const unsigned char* sha1,
+                            char* type, unsigned long *size);
 extern int write_sha1_file(const char* buf, unsigned int len);
 
 /* Convert to/from hex/sha1 representation */

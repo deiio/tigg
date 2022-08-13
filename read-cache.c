@@ -123,19 +123,12 @@ int write_sha1_buffer(unsigned char* sha1, const void* buf, unsigned int size) {
   return 0;
 }
 
-void* read_sha1_file(const unsigned char* sha1, char* type,
-                     unsigned long *size) {
-  z_stream stream;
-  char buffer[8192];
+void* map_sha1_file(const unsigned char* sha1, unsigned long* size) {
+  const char* filename = sha1_file_name(sha1);
+  int fd = open(filename, O_RDONLY);
   struct stat st;
-  int fd;
-  int ret;
-  int bytes;
   void* map;
-  void* buf;
-  char* filename = sha1_file_name(sha1);
 
-  fd = open(filename, O_RDONLY);
   if (fd < 0) {
     perror(filename);
     return NULL;
@@ -152,10 +145,22 @@ void* read_sha1_file(const unsigned char* sha1, char* type,
     return NULL;
   }
 
+  *size = st.st_size;
+  return map;
+}
+
+void* unpack_sha1_file(void* map, unsigned long map_size,
+                       char* type, unsigned long* size) {
+  int ret;
+  int bytes;
+  z_stream stream;
+  char buffer[8192];
+  void* buf;
+
   /* Get the data stream */
   memset(&stream, 0, sizeof(stream));
   stream.next_in = map;
-  stream.avail_in = st.st_size;
+  stream.avail_in = map_size;
   stream.next_out = (void*)buffer;
   stream.avail_out = sizeof(buffer);
 
@@ -182,9 +187,24 @@ void* read_sha1_file(const unsigned char* sha1, char* type,
   }
 
   inflateEnd(&stream);
-  munmap(map, st.st_size);
 
   return buf;
+}
+
+void* read_sha1_file(const unsigned char* sha1, char* type,
+                     unsigned long *size) {
+  unsigned long map_size;
+  void* map;
+  void* buf;
+
+  map = map_sha1_file(sha1, &map_size);
+  if (map) {
+    buf = unpack_sha1_file(map, map_size, type, size);
+    munmap(map, map_size);
+    return buf;
+  }
+
+  return NULL;
 }
 
 int write_sha1_file(const char* buf, unsigned int len) {
