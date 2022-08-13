@@ -123,6 +123,17 @@ int write_sha1_buffer(unsigned char* sha1, const void* buf, unsigned int size) {
   return 0;
 }
 
+int check_sha1_signature(const unsigned char* sha1,
+                         const void* buf, unsigned long size) {
+  unsigned char real_sha1[20];
+  SHA_CTX c;
+
+  SHA1_Init(&c);
+  SHA1_Update(&c, buf, size);
+  SHA1_Final(real_sha1, &c);
+  return memcmp(sha1, real_sha1, 20);
+}
+
 void* map_sha1_file(const unsigned char* sha1, unsigned long* size) {
   const char* filename = sha1_file_name(sha1);
   int fd = open(filename, O_RDONLY);

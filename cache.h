@@ -95,6 +95,8 @@ extern void* unpack_sha1_file(void* map, unsigned long map_size,
 extern void* read_sha1_file(const unsigned char* sha1,
                             char* type, unsigned long *size);
 extern int write_sha1_file(const char* buf, unsigned int len);
+extern int check_sha1_signature(const unsigned char* sha1,
+                                const void* buf, unsigned long size);
 
 /* Convert to/from hex/sha1 representation */
 extern int get_sha1_hex(const char* hex, unsigned char* sha1);
