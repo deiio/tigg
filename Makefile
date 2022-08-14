@@ -1,4 +1,4 @@
-# Copyright (c) $YEAR Furzoom.com, All rights reserved.
+# Copyright (c) 2022 Furzoom.com, All rights reserved.
 # Author: Furzoom, mn@furzoom.com
 
 # Optional defaults
