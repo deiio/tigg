@@ -76,3 +76,8 @@ of hash sha1.
 1. Use `read-tree <sha1>`.
 2. Read the object, and check its type.
 3. Output all the files in the tree object.
+
+## `fsck-cache`
+
+1. Use `fsck-cache`.
+2. Check the all things in `.tigg/objects` directory.
