@@ -22,7 +22,7 @@
 #include <zlib.h>
 
 #define DB_ENVIRONMENT "SHA1_FILE_DIRECTORY"
-#define DEFAULT_DB_ENVIRONMENT ".dircache/objects"
+#define DEFAULT_DB_ENVIRONMENT ".tigg/objects"
 
 /*
  * Basic data structures for the directory cache.

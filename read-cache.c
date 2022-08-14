@@ -305,7 +305,7 @@ int read_cache() {
     return error("no access to SHA1 file directory");
   }
 
-  fd = open(".dircache/index", O_RDONLY);
+  fd = open(".tigg/index", O_RDONLY);
   if (fd < 0) {
     return (errno == ENOENT) ? 0 : error("open failed");
   }

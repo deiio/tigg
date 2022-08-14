@@ -1,11 +1,11 @@
-# Important Thoughts
+# TIGG - Important Thoughts
 
 ## `init-db`
 
-1. Create local cache directory `.dircache`.
+1. Create local cache directory `.tigg`.
 2. If set the environment variable `SHA1_FILE_DIRECTORY`, use
 it as the storage area.
-3. Or, use the local cache directory `.dircache` as the storage area.
+3. Or, use the local cache directory `.tigg` as the storage area.
 4. Create all directories in storage area.
 
 ## `commit-tree`
@@ -34,8 +34,8 @@ of hash sha1.
 ## `update-cache`
 
 1. Use `update-cache [filepath ...]`.
-2. Read cached entries from `.dircache/index`.
-3. Create the file `.dircache/index.lock` while processing the entries.
+2. Read cached entries from `.tigg/index`.
+3. Create the file `.tigg/index.lock` while processing the entries.
 4. Add all file to the cache.
    1. Verify the file path, filter out dot, dot-dot, absolute path,
    hidden file, non-regular file.
@@ -43,13 +43,13 @@ of hash sha1.
 5. Blob object original structure:
    1. `blob + <space> + <size> + '\0'`.
    2. blob data.
-6. Write the cache records to `.dircache/index.lock`, and rename it to
-`.dircache/index`.
+6. Write the cache records to `.tigg/index.lock`, and rename it to
+`.tigg/index`.
 
 ## `show-diff`
 
 1. Use `show-diff`.
-2. Read cached entries from `.dircache/index`.
+2. Read cached entries from `.tigg/index`.
 3. Check the status of every file cached.
    1. Check the modifications of the file, which is changed by `mknod`,
    `truncate`, `utime`, `write`.
@@ -65,7 +65,7 @@ of hash sha1.
 ## `write-tree`
 
 1. Use `write-tree`.
-2. Read cached entries from `.dircache/index`.
+2. Read cached entries from `.tigg/index`.
 3. Write cached file to tree object.
 4. Tree object original structure:
    1. `tree + <space> + <size> + '\0'`.

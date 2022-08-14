@@ -238,7 +238,7 @@ static int write_cache(int fd, struct cache_entry** cache, int entries) {
 /*
  * We fundamentally don't like some paths: we don't want
  * dot or dot-dot anywhere, and in fact, we don't even want
- * any other dot-files (.dircache or anything else). They
+ * any other dot-files (.tigg or anything else). They
  * are hidden, for christ sake.
  *
  * Also, we don't want double slashes or slashes at the
@@ -278,7 +278,7 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
-  new_fd = open(".dircache/index.lock", O_RDWR | O_CREAT | O_EXCL, 0600);
+  new_fd = open(".tigg/index.lock", O_RDWR | O_CREAT | O_EXCL, 0600);
   if (new_fd < 0) {
     perror("unable to create new cachefile");
     return -1;
@@ -292,16 +292,16 @@ int main(int argc, char* argv[]) {
     }
     if (add_file_to_cache(path)) {
       fprintf(stderr, "Unable to add %s to database\n", path);
-      unlink(".dircache/index.lock");
+      unlink(".tigg/index.lock");
       return -1;
     }
   }
 
   if (!write_cache(new_fd, active_cache, active_nr)
-      && !rename(".dircache/index.lock", ".dircache/index")) {
+      && !rename(".tigg/index.lock", ".tigg/index")) {
     return 0;
   }
 
-  unlink(".dircache/index.lock");
+  unlink(".tigg/index.lock");
   return 0;
 }

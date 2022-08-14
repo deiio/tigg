@@ -11,8 +11,8 @@ int main(int argc, char* argv[]) {
   int len;
   int i;
 
-  if (mkdir(".dircache", 0700) < 0) {
-    perror("unable to create .dircache");
+  if (mkdir(".tigg", 0700) < 0) {
+    perror("unable to create .tigg");
     exit(1);
   }
 

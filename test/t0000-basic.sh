@@ -25,13 +25,13 @@ modification *should* take notice and update the test vectors here.
 # init-db has been done in an empty repository.
 # make sure it is empty
 
-find ".dircache/objects" -type f -print > should-be-empty
+find ".tigg/objects" -type f -print > should-be-empty
 test_expect_success \
-    '.dircache/objects should be empty after init-db in an empty repo.' \
+    '.tigg/objects should be empty after init-db in an empty repo.' \
     'cmp -s /dev/null should-be-empty'
 
 # also it should have 256 subdirectories.  257 is counting "objects"
-find ".dircache/objects" -type d -print > full-of-directories
+find ".tigg/objects" -type d -print > full-of-directories
 test_expect_success \
-    '.dircache/objects should have 256 subdirectories.' \
+    '.tigg/objects should have 256 subdirectories.' \
     "test \$(wc -l full-of-directories | awk '{print \$1}') = 257"
