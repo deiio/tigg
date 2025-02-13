@@ -239,7 +239,7 @@ static int write_cache(int fd, struct cache_entry** cache, int entries) {
  * We fundamentally don't like some paths: we don't want
  * dot or dot-dot anywhere, and in fact, we don't even want
  * any other dot-files (.tigg or anything else). They
- * are hidden, for christ sake.
+ * are hidden, for christ's sake.
  *
  * Also, we don't want double slashes or slashes at the
  * end that can make pathname ambiguous.
