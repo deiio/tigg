@@ -4,7 +4,9 @@
 # Optional defaults
 CFLAGS ?= -Wall -g -g3 -O3
 LDFLAGS ?=
-LDLIBS ?= -lz -lssl -lcrypto
+LDLIBS ?= -lz $(shell pkg-config --libs openssl)
+
+CFLAGS += $(shell pkg-config --cflags openssl)
 
 # All binaries
 PROG = cat-file \
