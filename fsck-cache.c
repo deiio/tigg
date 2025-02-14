@@ -13,18 +13,18 @@
  *
  * Right now we don't do that kind of reachability checking, Yet.
  */
-static void mark_needs_sha1(unsigned char* parent, const char* type,
-                            unsigned char* child) {}
+static void mark_needs_sha1(const unsigned char* parent, const char* type,
+                            const unsigned char* child) {}
 
 static int mark_sha1_seen(const unsigned char* sha1, const char* tag) {
   return 0;
 }
 
-static int fsck_tree(unsigned char* sha1, const void* data,
+static int fsck_tree(const unsigned char* sha1, const void* data,
                      unsigned long size) {
   while (size) {
     int len = 1 + strlen(data);
-    unsigned char* file_sha1 = data + len;
+    const unsigned char* file_sha1 = data + len;
     char* path = strchr(data, ' ');
     if (size < len + 20 || !path) {
       return -1;
@@ -37,7 +37,7 @@ static int fsck_tree(unsigned char* sha1, const void* data,
   return 0;
 }
 
-static int fsck_commit(unsigned char* sha1, const void* data,
+static int fsck_commit(const unsigned char* sha1, const void* data,
                        unsigned long size) {
   unsigned char tree_sha1[20];
   unsigned char parent_sha1[20];
@@ -50,7 +50,7 @@ static int fsck_commit(unsigned char* sha1, const void* data,
   }
   mark_needs_sha1(sha1, "tree", tree_sha1);
   data += 5 + 40 + 1;  /* "tree " + <hex sha1> + '\n' */
-  while (!memcpy(data, "parent ", 7)) {
+  while (!memcmp(data, "parent ", 7)) {
     if (get_sha1_hex(data + 7, parent_sha1) < 0) {
       return -1;
     }
