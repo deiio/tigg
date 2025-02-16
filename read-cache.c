@@ -123,6 +123,52 @@ int write_sha1_buffer(unsigned char* sha1, const void* buf, unsigned int size) {
   return 0;
 }
 
+static int cache_name_compare(const char* name1, int len1,
+                              const char* name2, int len2) {
+  int len;
+  int cmp;
+
+  len = len1 < len2 ? len1 : len2;
+  cmp = memcmp(name1, name2, len);
+  if (cmp != 0) {
+    return cmp;
+  }
+
+  if (len1 < len2) {
+    return -1;
+  } else if (len1 > len2) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+/*
+ * If name is existed in cache, return it's (-position - 1).
+ * Otherwise, return the position that it should be inserted.
+ */
+int cache_name_pos(const char* name, int name_len) {
+  int first;
+  int last;
+
+  first = 0;
+  last = active_nr;
+  while (last > first) {
+    int next = (last + first) >> 1;
+    struct cache_entry* ce = active_cache[next];
+    int cmp = cache_name_compare(name, name_len, ce->name, ce->namelen);
+    if (cmp == 0) {
+      return -next - 1;
+    } else if (cmp < 0) {
+      last = next;
+    } else {
+      first = next + 1;
+    }
+  }
+
+  return first;
+}
+
 int check_sha1_signature(const unsigned char* sha1,
                          const void* buf, unsigned long size) {
   unsigned char real_sha1[20];
@@ -312,7 +358,6 @@ int read_cache() {
 
   map = MAP_FAILED;
   if (fstat(fd, &st) == 0) {
-    map = NULL;
     size = st.st_size;
     errno = EINVAL;
     if (size >= sizeof(struct cache_header)) {
