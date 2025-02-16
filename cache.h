@@ -78,9 +78,17 @@ unsigned long cache_entry_size(unsigned long len);
 unsigned int ce_size(const struct cache_entry* ce);
 unsigned int alloc_nr(unsigned int n);
 
-/* Initialize the cache information */
+/* Initialize and use the cache information */
 extern int read_cache();
 extern int cache_name_pos(const char* name, int name_len);
+extern unsigned int cache_match_stat(struct cache_entry* ce, struct stat* st);
+
+#define MTIME_CHANGED 0x0001
+#define CTIME_CHANGED 0x0002
+#define OWNER_CHANGED 0x0004
+#define MODE_CHANGED  0x0008
+#define INODE_CHANGED 0x0010
+#define DATA_CHANGED  0x0020
 
 /* Return a statically allocated filename matching the sha1 signature */
 extern char* sha1_file_name(const unsigned char* sha1);
