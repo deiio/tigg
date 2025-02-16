@@ -10,6 +10,7 @@ CFLAGS += $(shell pkg-config --cflags openssl)
 
 # All binaries
 PROG = cat-file \
+	   checkout-cache \
        commit-tree \
        fsck-cache \
        init-db \
@@ -24,6 +25,7 @@ PROG = cat-file \
 all: $(PROG)
 
 cat-file: cat-file.o read-cache.o
+checkout-cache: checkout-cache.o read-cache.o
 commit-tree: commit-tree.o read-cache.o
 fsck-cache: fsck-cache.o read-cache.o
 init-db: init-db.o
@@ -33,6 +35,7 @@ update-cache: update-cache.o read-cache.o
 write-tree: write-tree.o read-cache.o
 
 cat-file.o: cache.h
+checkout-cache.o: cache.h
 commit-tree.o: cache.h
 fsck-cache.o: cache.h
 init-db.o: cache.h
