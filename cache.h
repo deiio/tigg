@@ -80,7 +80,10 @@ unsigned int alloc_nr(unsigned int n);
 
 /* Initialize and use the cache information */
 extern int read_cache();
+extern int write_cache(int fd, struct cache_entry** cache, int entries);
 extern int cache_name_pos(const char* name, int name_len);
+extern int add_cache_entry(struct cache_entry* ce);
+extern int remove_file_from_cache(const char* path);
 extern unsigned int cache_match_stat(struct cache_entry* ce, struct stat* st);
 
 #define MTIME_CHANGED 0x0001
